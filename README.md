@@ -1,4 +1,4 @@
-# Files Manage
+# Files Manager
 
 ## Initial Setup
 
