@@ -1,9 +1,9 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasOne, Model, Table } from "sequelize-typescript"
-import { Folder } from "src/folders/folders.model"
-import { AccessLink } from "src/permissions/access-link.model"
+import { BelongsTo, Column, DataType, ForeignKey, HasOne, Model, Table } from 'sequelize-typescript'
+import { Folder } from 'src/folders/folders.model'
+import { AccessLink } from 'src/permissions/access-link.model'
 
 @Table({ tableName: 'files' })
-export class File extends Model<File> {
+export class File extends Model {
   @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
   id: number
 

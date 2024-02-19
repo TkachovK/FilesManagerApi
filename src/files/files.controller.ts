@@ -1,11 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from "@nestjs/common"
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery } from "@nestjs/swagger"
-import { MultipleErrorsException } from "src/exceptions/multiple-errors.exception"
-import { GrantAccessDto } from "src/permissions/dto/grant-access.dto"
-import { JwtAuthGuard } from "src/auth/jwt/jwt-auth.guard"
-import { FilesService } from "./files.service"
-import { CreateFileDto } from "./dto/create-file.dto"
-import { CloneFileDto } from "./dto/clone-file.dto"
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, UseGuards } from '@nestjs/common'
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard'
+import { MultipleErrorsException } from 'src/exceptions/multiple-errors.exception'
+import { GrantAccessDto } from 'src/permissions/dto/grant-access.dto'
+
+import { CloneFileDto } from './dto/clone-file.dto'
+import { CreateFileDto } from './dto/create-file.dto'
+import { FilesService } from './files.service'
 
 @Controller('files')
 export class FilesController {

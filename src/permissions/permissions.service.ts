@@ -1,23 +1,27 @@
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
+import { Op } from 'sequelize'
 import { Permissions } from 'src/enums/permissions.enum'
 import { Folder } from 'src/folders/folders.model'
 import { User } from 'src/users/users.model'
-import { UserPermission } from './permissions.model'
-import { File } from 'src/files/files.model'
-import { Op } from 'sequelize'
+
 import { AccessLink } from './access-link.model'
-import { GrantAccessDto } from './dto/grant-access.dto'
+import { UserPermission } from './permissions.model'
+
+import type { GrantAccessDto } from './dto/grant-access.dto'
+import type { File } from 'src/files/files.model'
 
 @Injectable()
 export class UserPermissionsService {
   constructor(
     @InjectModel(UserPermission) private readonly userPermissionsRepository: typeof UserPermission,
     @InjectModel(User) private readonly userRepository: typeof User,
-    @InjectModel(AccessLink) private readonly accessLinkRepository: typeof AccessLink,
+    @InjectModel(AccessLink) private readonly accessLinkRepository: typeof AccessLink
   ) { }
 
-  async grantAccess(entityId: number, userId: number, permissions: Permissions, entityType: 'folder' | 'file'): Promise<void> {
+  async grantAccess(
+    entityId: number, userId: number, permissions: Permissions, entityType: 'folder' | 'file'
+  ): Promise<void> {
     const userPermission = await this.userPermissionsRepository.findOne({ where: { entityId, userId, entityType } })
 
     userPermission
@@ -31,13 +35,13 @@ export class UserPermissionsService {
     await userPermission.destroy()
   }
 
-  async getEntityWithAccess<T>(userId: number, permissions: Permissions[], model: typeof Folder | typeof File) {
+  async getEntityWithAccess(userId: number, permissions: Permissions[], model: typeof Folder | typeof File) {
     const isModelFolder = model === Folder
     const creatorPermissions = await this.userPermissionsRepository.findAll({
       where: {
         userId,
         permissions: Permissions.CREATOR,
-        entityType: isModelFolder ? 'folder' : 'file'
+        entityType: isModelFolder ? 'folder' : 'file',
       },
       include: [
         {
@@ -52,9 +56,9 @@ export class UserPermissionsService {
       where: {
         userId,
         permissions: {
-          [Op.or]: [Permissions.VIEW, Permissions.EDIT]
+          [Op.or]: [Permissions.VIEW, Permissions.EDIT],
         },
-        entityType: isModelFolder ? 'folder' : 'file'
+        entityType: isModelFolder ? 'folder' : 'file',
       },
       include: [
         {
@@ -65,12 +69,12 @@ export class UserPermissionsService {
     })
 
     const userPermissions = [...creatorPermissions, ...accessedPermissions]
-    const ids = userPermissions.map((permission) => permission.entityId)
+    const ids = userPermissions.map(permission => permission.entityId)
     const entityPermissions = await this.userPermissionsRepository.findAll({
       where: {
         entityId: ids,
         permissions,
-        entityType: isModelFolder ? 'folder' : 'file'
+        entityType: isModelFolder ? 'folder' : 'file',
       },
       include: [
         {
@@ -80,11 +84,11 @@ export class UserPermissionsService {
       ],
     })
 
-    const entities = userPermissions.map((permission) => ({
+    const entities = userPermissions.map(permission => ({
       id: permission.entityId,
       permissions: entityPermissions
-        .filter((item) => item.entityId === permission.entityId)
-        .map((filteredItem) => ({
+        .filter(item => item.entityId === permission.entityId)
+        .map(filteredItem => ({
           action: filteredItem.permissions,
           email: filteredItem.user.email,
           avatar: filteredItem.user.avatar,

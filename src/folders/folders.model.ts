@@ -1,7 +1,8 @@
-import { Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from "sequelize-typescript"
-import { File } from "src/files/files.model"
-import { AccessLink } from "src/permissions/access-link.model"
-import { UserPermission } from "src/permissions/permissions.model"
+/* eslint-disable no-use-before-define */
+import { Column, DataType, ForeignKey, HasMany, HasOne, Model, Table } from 'sequelize-typescript'
+import { File } from 'src/files/files.model'
+import { AccessLink } from 'src/permissions/access-link.model'
+import { UserPermission } from 'src/permissions/permissions.model'
 
 export interface FolderCreationAttrs {
   name: string,
@@ -25,10 +26,14 @@ export class Folder extends Model<Folder, FolderCreationAttrs> {
   @HasMany(() => Folder, 'parentId')
   folders: Folder[]
 
-  @HasOne(() => UserPermission, { foreignKey: 'entityId', constraints: false, scope: { entityType: 'folder' }, as: 'permissions' })
+  @HasOne(() => UserPermission, {
+    foreignKey: 'entityId', constraints: false, scope: { entityType: 'folder' }, as: 'permissions',
+  })
   permissions: UserPermission
 
-  @HasOne(() => AccessLink, { foreignKey: 'linkedId', constraints: false, scope: { linkedType: 'folders' }, as: 'link' })
+  @HasOne(() => AccessLink, {
+    foreignKey: 'linkedId', constraints: false, scope: { linkedType: 'folders' }, as: 'link',
+  })
   link: AccessLink
 
   @ForeignKey(() => AccessLink)

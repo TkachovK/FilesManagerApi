@@ -1,12 +1,25 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common"
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiQuery } from "@nestjs/swagger"
-import { FolderService } from "./folders.service"
-import { CreateFolderDto } from "./dto/create-folder.dto"
-import { FilesInterceptor } from "@nestjs/platform-express"
-import { MultipleErrorsException } from "src/exceptions/multiple-errors.exception"
-import { EditFolderDto } from "./dto/edit-folder.dto"
-import { GrantAccessDto } from "src/permissions/dto/grant-access.dto"
-import { JwtAuthGuard } from "src/auth/jwt/jwt-auth.guard"
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Query,
+  UploadedFiles,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common'
+import { FilesInterceptor } from '@nestjs/platform-express'
+import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOperation, ApiParam, ApiQuery } from '@nestjs/swagger'
+import { JwtAuthGuard } from 'src/auth/jwt/jwt-auth.guard'
+import { MultipleErrorsException } from 'src/exceptions/multiple-errors.exception'
+import { GrantAccessDto } from 'src/permissions/dto/grant-access.dto'
+
+import { CreateFolderDto } from './dto/create-folder.dto'
+import { EditFolderDto } from './dto/edit-folder.dto'
+import { FolderService } from './folders.service'
 
 @Controller('folders')
 export class FolderController {
@@ -98,7 +111,7 @@ export class FolderController {
     @Param('id') folderId: number,
     @UploadedFiles() files: Array<Express.Multer.File>,
     @Body('isPublic') isPublic: boolean,
-    @Body('userEmail') userEmail: string,
+    @Body('userEmail') userEmail: string
   ) {
     return this.folderService.createFiles(folderId, files, userEmail, isPublic)
   }
