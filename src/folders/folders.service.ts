@@ -1,18 +1,21 @@
-import * as uuid from 'uuid'
+
 import { Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
 import { Sequelize } from 'sequelize-typescript'
-import { Folder } from './folders.model'
+import { Permissions } from 'src/enums/permissions.enum'
 import { File } from 'src/files/files.model'
 import { FilesService } from 'src/files/files.service'
-import { Permissions } from 'src/enums/permissions.enum'
-import { User } from 'src/users/users.model'
 import { AccessLink } from 'src/permissions/access-link.model'
-import { UserPermissionsService } from 'src/permissions/permissions.service'
 import { UserPermission } from 'src/permissions/permissions.model'
-import { GrantAccessDto } from 'src/permissions/dto/grant-access.dto'
-import { CreateFolderDto } from './dto/create-folder.dto'
-import { EditFolderDto } from './dto/edit-folder.dto'
+import { UserPermissionsService } from 'src/permissions/permissions.service'
+import { User } from 'src/users/users.model'
+import * as uuid from 'uuid'
+
+import { Folder } from './folders.model'
+
+import type { CreateFolderDto } from './dto/create-folder.dto'
+import type { EditFolderDto } from './dto/edit-folder.dto'
+import type { GrantAccessDto } from 'src/permissions/dto/grant-access.dto'
 
 const MAX_SAFE_FOLDER_LAYERS = 10
 
@@ -26,7 +29,7 @@ export class FolderService {
     @InjectModel(AccessLink) private readonly accessLinkRepository: typeof AccessLink,
     private readonly filesService: FilesService,
     private readonly permissionsService: UserPermissionsService,
-    private readonly sequelize: Sequelize,
+    private readonly sequelize: Sequelize
   ) { }
 
   async getAll(userEmail: string) {
@@ -80,13 +83,13 @@ export class FolderService {
   }
 
   async clone(id: number, dto: CreateFolderDto) {
-    const { parentId, permissions } = dto
+    const { parentId } = dto
     const clonedFolder = await this.cloneFolderWithSubfolders(id, parentId)
 
     const folder = await this.folderRepository.findOne({ where: { id: clonedFolder.id } })
     folder.update({ name: folder.name + ' - copy' })
     const nestedFolder = await this.loadSubfolders(clonedFolder.id, MAX_SAFE_FOLDER_LAYERS)
-    nestedFolder.name = nestedFolder.name + ' - copy'
+    nestedFolder.name += ' - copy'
 
     return nestedFolder
   }
@@ -99,7 +102,7 @@ export class FolderService {
   }
 
   async delete(id: number) {
-    return await this.sequelize.transaction(async (transaction) => {
+    return await this.sequelize.transaction(async transaction => {
       const deleteFolderRecursive = async (folderId: number) => {
         const folder = await this.folderRepository.findOne({
           where: { id: folderId },
@@ -112,7 +115,7 @@ export class FolderService {
         }
 
         await this.fileRepository.destroy({
-          where: { id: folder.files.map((file) => file.id) },
+          where: { id: folder.files.map(file => file.id) },
           transaction,
         })
 
@@ -178,9 +181,9 @@ export class FolderService {
         {
           model: AccessLink,
           as: 'link',
-          attributes: ['access', 'link', 'disabled', 'linkedType']
+          attributes: ['access', 'link', 'disabled', 'linkedType'],
         },
-      ]
+      ],
     })
 
     if (!folder || depth <= 1) {
@@ -188,7 +191,7 @@ export class FolderService {
     }
 
     const subfoldersPromises = folder.folders.map(subfolder =>
-      this.loadSubfolders(subfolder.id, depth - 1, action),
+      this.loadSubfolders(subfolder.id, depth - 1, action)
     )
     const folders = await Promise.all(subfoldersPromises)
 
@@ -222,7 +225,7 @@ export class FolderService {
         originalFolder.folders.map(async subfolder => {
           const clonedSubfolder = await this.cloneFolderWithSubfolders(subfolder.id, createdClonedFolder.id)
           await createdClonedFolder.$add('folders', clonedSubfolder)
-        }),
+        })
       )
     }
 

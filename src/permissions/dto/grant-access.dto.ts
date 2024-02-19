@@ -1,5 +1,5 @@
-import { IsArray, IsString, IsEmail, IsBoolean } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
+import { IsArray, IsBoolean, IsEmail, IsString } from 'class-validator'
 
 export class EmailActionDto {
   @ApiProperty({ description: 'Email address', example: 'user@example.com' })

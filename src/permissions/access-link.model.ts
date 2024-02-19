@@ -1,9 +1,10 @@
-import { Table, Column, Model, BelongsTo, DataType } from 'sequelize-typescript'
-import { Folder } from '../folders/folders.model'
+import { BelongsTo, Column, DataType, Model, Table } from 'sequelize-typescript'
 import { File } from 'src/files/files.model'
 
+import { Folder } from '../folders/folders.model'
+
 @Table({ tableName: 'access_links' })
-export class AccessLink extends Model<AccessLink> {
+export class AccessLink extends Model {
   @Column({ type: DataType.STRING })
   link: string
 

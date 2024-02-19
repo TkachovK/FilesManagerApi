@@ -1,7 +1,8 @@
-import { Module, forwardRef } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
+import { UsersModule } from 'src/users/users.module'
+
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
-import { UsersModule } from 'src/users/users.module'
 import { GoogleStrategy } from './google.strategy'
 import { JwtAuthModule } from './jwt/jwt-auth.module'
 
@@ -9,6 +10,6 @@ import { JwtAuthModule } from './jwt/jwt-auth.module'
   controllers: [AuthController],
   providers: [AuthService, GoogleStrategy],
   imports: [forwardRef(() => UsersModule), JwtAuthModule],
-  exports: [AuthService]
+  exports: [AuthService],
 })
 export class AuthModule { }

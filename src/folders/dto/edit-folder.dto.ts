@@ -1,5 +1,5 @@
-import { IsString, IsOptional, IsInt, IsEmail } from 'class-validator'
 import { ApiProperty } from '@nestjs/swagger'
+import { IsEmail, IsInt, IsOptional, IsString } from 'class-validator'
 
 export class EditFolderDto {
   @ApiProperty({ description: 'Name of the folder', example: 'My Folder' })

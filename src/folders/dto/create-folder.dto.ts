@@ -1,6 +1,6 @@
-import { IsString, IsOptional, IsInt, IsEmail, IsArray, ValidateNested } from 'class-validator'
-import { Type } from 'class-transformer'
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
+import { Type } from 'class-transformer'
+import { IsArray, IsEmail, IsInt, IsOptional, IsString, ValidateNested } from 'class-validator'
 
 class UsersPermissionsDto {
   @ApiProperty({ description: 'Action permission', enum: ['view', 'edit', 'creator'], example: 'view' })

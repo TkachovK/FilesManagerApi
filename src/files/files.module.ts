@@ -1,20 +1,21 @@
-import { Module, forwardRef } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
+import { SequelizeModule } from '@nestjs/sequelize'
+import { JwtAuthModule } from 'src/auth/jwt/jwt-auth.module'
+import { AccessLink } from 'src/permissions/access-link.model'
 import { PermissionsModule } from 'src/permissions/permissions.module'
 import { User } from 'src/users/users.model'
-import { AccessLink } from 'src/permissions/access-link.model'
-import { JwtAuthModule } from 'src/auth/jwt/jwt-auth.module'
-import { FilesService } from './files.service'
+
 import { FilesController } from './files.controller'
-import { SequelizeModule } from '@nestjs/sequelize'
 import { File } from './files.model'
+import { FilesService } from './files.service'
 
 @Module({
   controllers: [FilesController],
   providers: [FilesService],
   imports: [
-    SequelizeModule.forFeature([File, User, AccessLink]), 
+    SequelizeModule.forFeature([File, User, AccessLink]),
     PermissionsModule,
-    forwardRef(() => JwtAuthModule)
+    forwardRef(() => JwtAuthModule),
   ],
   exports: [FilesService],
 })

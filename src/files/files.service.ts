@@ -1,17 +1,21 @@
+
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { InjectModel } from '@nestjs/sequelize'
-import * as fs from 'fs'
-import * as path from 'path'
-import * as uuid from 'uuid'
-import { Stream } from 'node:stream'
-import { File } from './files.model'
-import { CreateFileDto } from './dto/create-file.dto'
-import { CloneFileDto } from './dto/clone-file.dto'
 import { Permissions } from 'src/enums/permissions.enum'
-import { User } from 'src/users/users.model'
-import { UserPermissionsService } from 'src/permissions/permissions.service'
 import { AccessLink } from 'src/permissions/access-link.model'
-import { GrantAccessDto } from 'src/permissions/dto/grant-access.dto'
+import { UserPermissionsService } from 'src/permissions/permissions.service'
+import { User } from 'src/users/users.model'
+import * as uuid from 'uuid'
+
+import { File } from './files.model'
+
+import type { CloneFileDto } from './dto/clone-file.dto'
+import type { CreateFileDto } from './dto/create-file.dto'
+import type { Stream } from 'node:stream'
+import type { GrantAccessDto } from 'src/permissions/dto/grant-access.dto'
 
 @Injectable()
 export class FilesService {
@@ -19,7 +23,7 @@ export class FilesService {
     @InjectModel(File) private fileRepository: typeof File,
     @InjectModel(User) private readonly userRepository: typeof User,
     @InjectModel(AccessLink) private readonly accessLinkRepository: typeof AccessLink,
-    private readonly permissionsService: UserPermissionsService,
+    private readonly permissionsService: UserPermissionsService
   ) { }
 
   async getAvailable(userEmail: string) {
@@ -108,21 +112,18 @@ export class FilesService {
   async delete(id: number) {
     await this.fileRepository.destroy({
       where: {
-        id
-      }
+        id,
+      },
     })
   }
 
   private async stream2buffer(stream: Stream): Promise<Buffer> {
-
     return new Promise<Buffer>((resolve, reject) => {
-
       const _buf = Array<any>()
 
-      stream.on("data", chunk => _buf.push(chunk))
-      stream.on("end", () => resolve(Buffer.concat(_buf)))
-      stream.on("error", err => reject(`error converting stream - ${err}`))
-
+      stream.on('data', chunk => _buf.push(chunk))
+      stream.on('end', () => resolve(Buffer.concat(_buf)))
+      stream.on('error', err => reject(`error converting stream - ${err}`))
     })
   }
 }

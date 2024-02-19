@@ -1,11 +1,12 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from "sequelize-typescript"
-import { User } from "src/users/users.model"
-import { Folder } from "src/folders/folders.model"
-import { File } from "src/files/files.model"
-import { Permissions } from "src/enums/permissions.enum"
+import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript'
+import { File } from 'src/files/files.model'
+import { Folder } from 'src/folders/folders.model'
+import { User } from 'src/users/users.model'
+
+import type { Permissions } from 'src/enums/permissions.enum'
 
 @Table({ tableName: 'user_permissions' })
-export class UserPermission extends Model<UserPermission> {
+export class UserPermission extends Model {
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER })
   userId: number

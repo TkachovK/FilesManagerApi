@@ -1,15 +1,16 @@
-import { Module, forwardRef } from '@nestjs/common'
+import { forwardRef, Module } from '@nestjs/common'
 import { SequelizeModule } from '@nestjs/sequelize'
-import { FolderController } from './folders.controller'
-import { FolderService } from './folders.service'
-import { Folder } from './folders.model'
-import { FilesModule } from 'src/files/files.module'
+import { JwtAuthModule } from 'src/auth/jwt/jwt-auth.module'
 import { File } from 'src/files/files.model'
-import { PermissionsModule } from 'src/permissions/permissions.module'
-import { User } from 'src/users/users.model'
+import { FilesModule } from 'src/files/files.module'
 import { AccessLink } from 'src/permissions/access-link.model'
 import { UserPermission } from 'src/permissions/permissions.model'
-import { JwtAuthModule } from 'src/auth/jwt/jwt-auth.module'
+import { PermissionsModule } from 'src/permissions/permissions.module'
+import { User } from 'src/users/users.model'
+
+import { FolderController } from './folders.controller'
+import { Folder } from './folders.model'
+import { FolderService } from './folders.service'
 
 @Module({
   controllers: [FolderController],
@@ -18,8 +19,8 @@ import { JwtAuthModule } from 'src/auth/jwt/jwt-auth.module'
     SequelizeModule.forFeature([Folder, File, UserPermission, User, AccessLink]),
     FilesModule,
     PermissionsModule,
-    forwardRef(() => JwtAuthModule)
+    forwardRef(() => JwtAuthModule),
   ],
-  exports: [FolderService]
+  exports: [FolderService],
 })
 export class FoldersModule { }
